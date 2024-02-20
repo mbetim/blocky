@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -36,6 +37,12 @@ func StartConfig() error {
 		if _, err := os.Create(configFullPath); err != nil {
 			return err
 		}
+	}
+
+	err = viper.ReadInConfig()
+	if err != nil {
+		fmt.Println("Error reading config file, ", err)
+		return err
 	}
 
 	return nil
