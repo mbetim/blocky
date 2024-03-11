@@ -33,3 +33,25 @@ func BlockDomains(domains []string) error {
 
 	return nil
 }
+
+func UnblockDomains(domains []string) error {
+	hosts, err := txeh.NewHostsDefault()
+	if err != nil {
+		return err
+	}
+
+	for _, domain := range domains {
+		wwwDomain := "www." + domain
+
+		hosts.RemoveHost(domain)
+		hosts.RemoveHost(wwwDomain)
+	}
+
+	hosts.RemoveHosts(domains)
+	err = hosts.Save()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
