@@ -3,9 +3,9 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/mbetim/blocky/utils"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/txn2/txeh"
 )
 
 var blockCmd = &cobra.Command{
@@ -25,29 +25,7 @@ var blockCmd = &cobra.Command{
 			return
 		}
 
-		hosts, err := txeh.NewHostsDefault()
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-
-		savedDomains := make(map[string]struct{})
-
-		for _, domain := range domains {
-			if _, ok := savedDomains[domain]; ok {
-				continue
-			}
-
-			wwwDomain := "www." + domain
-
-			hosts.AddHost("127.0.0.1", domain)
-			hosts.AddHost("127.0.0.1", wwwDomain)
-
-			savedDomains[domain] = struct{}{}
-			savedDomains[wwwDomain] = struct{}{}
-		}
-
-		err = hosts.Save()
+		err := utils.BlockDomains(domains)
 		if err != nil {
 			fmt.Println(err)
 			return

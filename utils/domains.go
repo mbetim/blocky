@@ -1,0 +1,35 @@
+package utils
+
+import (
+	"github.com/txn2/txeh"
+)
+
+func BlockDomains(domains []string) error {
+	hosts, err := txeh.NewHostsDefault()
+	if err != nil {
+		return err
+	}
+
+	savedDomains := make(map[string]struct{})
+
+	for _, domain := range domains {
+		if _, ok := savedDomains[domain]; ok {
+			continue
+		}
+
+		wwwDomain := "www." + domain
+
+		hosts.AddHost("127.0.0.1", domain)
+		hosts.AddHost("127.0.0.1", wwwDomain)
+
+		savedDomains[domain] = struct{}{}
+		savedDomains[wwwDomain] = struct{}{}
+	}
+
+	err = hosts.Save()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
