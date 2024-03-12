@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os/exec"
 	"strings"
 	"time"
 
@@ -10,12 +11,14 @@ import (
 	"github.com/spf13/viper"
 )
 
+var domains []string
+
 var unblockCmd = &cobra.Command{
 	Use:   "unblock",
 	Short: "Unblock the domains for a x period of time",
 	Long:  `Unblock the domains for a x period of time`,
 	Run: func(cmd *cobra.Command, args []string) {
-		domains := args
+		domains = args
 
 		if len(domains) == 0 {
 			domains = viper.GetStringSlice("default-domains")
@@ -45,12 +48,13 @@ var unblockCmd = &cobra.Command{
 func blockDefaultDomains() {
 	fmt.Println("Blocking domains again")
 
-	domains := viper.GetStringSlice("default-domains")
 	err := utils.BlockDomains(domains)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
+
+	exec.Command("terminal-notifier", "-message", "Domains have been blocked again", "-sound", "default").Run()
 }
 
 func init() {
