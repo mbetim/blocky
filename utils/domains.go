@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"os/exec"
+
 	"github.com/txn2/txeh"
 )
 
@@ -54,4 +56,8 @@ func UnblockDomains(domains []string) error {
 	}
 
 	return nil
+}
+
+func FlushDns() {
+	exec.Command("dscacheutil", "-flushcache").Run()
 }
