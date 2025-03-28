@@ -30,6 +30,8 @@ var unblockCmd = &cobra.Command{
 			return
 		}
 
+		utils.FlushDns()
+
 		timeToBlockAgain, _ := cmd.Flags().GetInt("time")
 		joinedDomains := strings.Join(domains, "\n\t- ")
 		messageFormat := "The following domains have been unblocked: \n\t- %s \n\nThey'll be blocked again in %d minutes or if any key is pressed\n"
@@ -53,6 +55,8 @@ func blockDefaultDomains() {
 		fmt.Println(err)
 		return
 	}
+
+	utils.FlushDns()
 
 	exec.Command("terminal-notifier", "-message", "Domains have been blocked again", "-sound", "default").Run()
 }

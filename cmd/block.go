@@ -31,6 +31,8 @@ var blockCmd = &cobra.Command{
 			return
 		}
 
+		utils.FlushDns()
+
 		fmt.Println("The domains have been blocked")
 	},
 }
